@@ -17,9 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
       width: context.width,
       height: context.height,
       color: deepBlue,
-      child: Center(
-        child: Image.asset('assets/images/splash.png'),
-      ),
+      child: Center(),
     );
   }
 }
