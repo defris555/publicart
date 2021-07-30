@@ -2,7 +2,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
+import 'screens/map_screen.dart';
 import 'screens/on_boarding.dart';
 import 'utils/theme.dart';
 
@@ -14,12 +16,14 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     first = box.read('first') ?? true;
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: mainTheme(),
-      home: first ? OnBoarding() : HomeScreen(),
-    );
+    return ResponsiveSizer(builder: (context, orientation, screenType) {
+      return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: mainTheme(),
+        home: first ? const OnBoarding() : const MapScreen(),
+      );
+    });
   }
 }
