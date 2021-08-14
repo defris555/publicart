@@ -1,6 +1,7 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:publicart/src/screens/gallery.dart';
 import 'package:publicart/src/screens/info_screen.dart';
 import 'package:publicart/src/utils/colors.dart';
 
@@ -38,7 +39,7 @@ class _BottomMapBarState extends State<BottomMapBar> {
             Padding(
               padding: EdgeInsets.only(left: ctxW * 0.05, top: ctxH * 0.01),
               child: InkWell(
-                onTap: () => Get.to(() => const InfoScreen()),
+                onTap: () => Get.to(() => const Gallery()),
                 child: SvgPicture.asset('assets/svg/gallery.svg'),
               ),
             ),
