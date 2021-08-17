@@ -16,7 +16,7 @@ class NewsData {
   });
 
   static NewsData fromJson(Map<String, dynamic> json) => NewsData(
-      // newsId: json[NewsModel.newsId],
+      newsId: json[NewsModel.newsId],
       title: json[NewsModel.title],
       longRead: json[NewsModel.longRead],
       newsPhoto: json[NewsModel.newsPhoto],

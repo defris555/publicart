@@ -8,12 +8,15 @@ import 'package:geolocator/geolocator.dart' as gl;
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
+import 'package:publicart/src/api/models/graffity_data.dart';
 import 'package:publicart/src/screens/info_screen.dart';
 import 'package:publicart/src/utils/colors.dart';
 import 'package:publicart/src/widgets/bottom_map_bar.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({Key? key, required this.allGraffitys}) : super(key: key);
+
+  final List<GraffityData> allGraffitys;
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -128,6 +131,7 @@ class _MapScreenState extends State<MapScreen> {
                 alignment: Alignment.bottomCenter,
                 child: BottomMapBar(
                   context: context,
+                  allGraffities: widget.allGraffitys,
                 ),
               ),
               _loading
@@ -198,7 +202,9 @@ class _MapScreenState extends State<MapScreen> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          Get.offAll(const MapScreen());
+                          Get.offAll(MapScreen(
+                            allGraffitys: widget.allGraffitys,
+                          ));
                           setState(() {
                             AppSettings.openLocationSettings();
                           });
@@ -236,7 +242,8 @@ class _MapScreenState extends State<MapScreen> {
                     //     'Для корректной работы приложения, перейдите в настройки устройства и предоставте приложению доступ к определеню местоположения.'),
                     TextButton(
                       onPressed: () {
-                        Get.offAll(const MapScreen());
+                        Get.offAll(
+                            MapScreen(allGraffitys: widget.allGraffitys));
                         setState(() {
                           AppSettings.openLocationSettings();
                         });

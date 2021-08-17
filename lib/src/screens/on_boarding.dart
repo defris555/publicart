@@ -2,11 +2,14 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:publicart/src/api/models/graffity_data.dart';
 import 'package:publicart/src/screens/map_screen.dart';
 import 'package:publicart/src/utils/colors.dart';
 
 class OnBoarding extends StatefulWidget {
-  const OnBoarding({Key? key}) : super(key: key);
+  const OnBoarding({Key? key, required this.allGraffitys}) : super(key: key);
+
+  final List<GraffityData> allGraffitys;
 
   @override
   _OnBoardingState createState() => _OnBoardingState();
@@ -18,7 +21,7 @@ class _OnBoardingState extends State<OnBoarding> {
 
   void _onIntroEnd(context) {
     box.write('first', false);
-    Get.to(() => const MapScreen());
+    Get.to(() => MapScreen(allGraffitys: widget.allGraffitys));
   }
 
   Widget _buildFullscrenImage(BuildContext context, String introIndex) {
