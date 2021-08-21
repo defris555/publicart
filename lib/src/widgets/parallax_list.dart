@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -11,9 +12,7 @@ import 'package:publicart/src/utils/colors.dart';
 import 'package:publicart/src/utils/constants.dart';
 
 class ParallaxList extends StatefulWidget {
-  const ParallaxList({Key? key, required this.allGraffities}) : super(key: key);
-
-  final List<GraffityData> allGraffities;
+  const ParallaxList({Key? key}) : super(key: key);
 
   @override
   State<ParallaxList> createState() => _ParallaxListState();
@@ -21,40 +20,96 @@ class ParallaxList extends StatefulWidget {
 
 class _ParallaxListState extends State<ParallaxList> {
   final GetStorage box = GetStorage();
+  // List<GraffityData> artworks = [];
+
+  // getGraffitiesData(AsyncSnapshot<QuerySnapshot> snapshot) async {
+  //   artworks = [];
+  //   var data = snapshot.data;
+  //   artworks.addAll(data!.docs.map((artwork) {
+  //     return GraffityData(
+  //       id: artwork['id'],
+  //       name: artwork['name'],
+  //       description: artwork['description'],
+  //       city: artwork['city'],
+  //       address: artwork['address'],
+  //       audio: artwork['audio'],
+  //       ar: artwork['ar'],
+  //       latlng: artwork['latlng'],
+  //       artist: artwork['artist'],
+  //       bio: artwork['bio'],
+  //       avatar: artwork['avatar'],
+  //       insta: artwork['insta'],
+  //       insta2: artwork['insta2'],
+  //       photoUrl: artwork['photoUrl'],
+  //       photoSqr: artwork['photoSqr'],
+  //     );
+  //   }).toList());
+  //   artworks.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
+  //   print(artworks.first.name);
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    // getGraffitiesData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // return SingleChildScrollView(
-    // child: Column(
-    //   children: [
-    //     for (final graffity in _allGraffities)
-    //       GraffityListItem(
-    //         imgUrl: '$photoUrlPrefix/${graffity.photoUrl}',
-    //         name: graffity.name,
-    //         address: graffity.address,
-    //       )
-    //   ],
-    // ),
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('graffities').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          // getGraffitiesData(snapshot);
+          // List artworks = snapshot.data!.docs.map((artwork) {
+          //   return GraffityData(
+          //     id: artwork['id'],
+          //     name: artwork['name'],
+          //     description: artwork['description'],
+          //     city: artwork['city'],
+          //     address: artwork['address'],
+          //     audio: artwork['audio'],
+          //     ar: artwork['ar'],
+          //     latlng: artwork['latlng'],
+          //     artist: artwork['artist'],
+          //     bio: artwork['bio'],
+          //     avatar: artwork['avatar'],
+          //     insta: artwork['insta'],
+          //     insta2: artwork['insta2'],
+          //     photoUrl: artwork['photoUrl'],
+          //     photoSqr: artwork['photoSqr'],
+          //   );
+          // }).toList();
+          // artworks.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
+          return ListView(
+            children: snapshot.data?.docs.length != null
+                ? snapshot.data!.docs.map((artwork) {
+                    return GraffityListItem(
+                      imgUrl: artwork['photoSqr'],
+                      name: artwork['name'],
+                      city: artwork['city'],
+                      address: artwork['address'],
+                    );
+                  }).toList()
+                : [const Text('loading')],
+          );
+        });
+    // return ListView.builder(
+    //   itemBuilder: (context, index) {
+    //     return Column(
+    //       children: [
+    //         for (int i = index; i < allGraffities.length; i++)
+    //           GraffityListItem(
+    //             imgUrl: '$photoUrlPrefix/${allGraffities[i]["photoSqr"]}',
+    //             name: allGraffities[i]['name'],
+    //             city: allGraffities[i]['city'],
+    //             address: allGraffities[i]['address'],
+    //           ),
+    //       ],
+    //     );
+    //   },
+    //   primary: true,
+    //   itemCount: 1,
     // );
-    // final List<GraffityData> _allGraffities =
-    //     widget.allGraffities.reversed.toList();
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            for (int i = index; i < widget.allGraffities.length; i++)
-              GraffityListItem(
-                imgUrl: '$photoUrlPrefix/${widget.allGraffities[i].photoSqr}',
-                name: widget.allGraffities[i].name,
-                city: widget.allGraffities[i].city,
-                address: widget.allGraffities[i].address,
-              ),
-          ],
-        );
-      },
-      primary: true,
-      itemCount: 1,
-    );
   }
 }
 

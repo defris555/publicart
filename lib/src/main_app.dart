@@ -14,9 +14,8 @@ class MainApp extends StatelessWidget {
   final GetStorage box = GetStorage();
   late bool first;
   Widget? screen;
-  final List<GraffityData> allGraffities;
 
-  MainApp({Key? key, required this.allGraffities}) : super(key: key);
+  MainApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +26,7 @@ class MainApp extends StatelessWidget {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: mainTheme(),
-        home: first
-            ? OnBoarding(
-                allGraffitys: allGraffities,
-              )
-            : MapScreen(
-                allGraffitys: allGraffities,
-              ),
+        home: first ? OnBoarding() : MapScreen(),
       );
     });
   }

@@ -7,9 +7,7 @@ import 'package:publicart/src/screens/map_screen.dart';
 import 'package:publicart/src/utils/colors.dart';
 
 class OnBoarding extends StatefulWidget {
-  const OnBoarding({Key? key, required this.allGraffitys}) : super(key: key);
-
-  final List<GraffityData> allGraffitys;
+  const OnBoarding({Key? key}) : super(key: key);
 
   @override
   _OnBoardingState createState() => _OnBoardingState();
@@ -21,7 +19,7 @@ class _OnBoardingState extends State<OnBoarding> {
 
   void _onIntroEnd(context) {
     box.write('first', false);
-    Get.to(() => MapScreen(allGraffitys: widget.allGraffitys));
+    Get.to(() => MapScreen());
   }
 
   Widget _buildFullscrenImage(BuildContext context, String introIndex) {

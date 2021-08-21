@@ -14,9 +14,7 @@ import 'package:publicart/src/utils/colors.dart';
 import 'package:publicart/src/widgets/bottom_map_bar.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key, required this.allGraffitys}) : super(key: key);
-
-  final List<GraffityData> allGraffitys;
+  const MapScreen({Key? key}) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -131,7 +129,6 @@ class _MapScreenState extends State<MapScreen> {
                 alignment: Alignment.bottomCenter,
                 child: BottomMapBar(
                   context: context,
-                  allGraffities: widget.allGraffitys,
                 ),
               ),
               _loading
@@ -202,9 +199,7 @@ class _MapScreenState extends State<MapScreen> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          Get.offAll(MapScreen(
-                            allGraffitys: widget.allGraffitys,
-                          ));
+                          Get.offAll(MapScreen());
                           setState(() {
                             AppSettings.openLocationSettings();
                           });
@@ -242,8 +237,7 @@ class _MapScreenState extends State<MapScreen> {
                     //     'Для корректной работы приложения, перейдите в настройки устройства и предоставте приложению доступ к определеню местоположения.'),
                     TextButton(
                       onPressed: () {
-                        Get.offAll(
-                            MapScreen(allGraffitys: widget.allGraffitys));
+                        Get.offAll(MapScreen());
                         setState(() {
                           AppSettings.openLocationSettings();
                         });

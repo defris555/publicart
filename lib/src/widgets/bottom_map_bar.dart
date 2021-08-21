@@ -8,10 +8,7 @@ import 'package:publicart/src/utils/colors.dart';
 
 class BottomMapBar extends StatefulWidget {
   final BuildContext context;
-  final List<GraffityData> allGraffities;
-  const BottomMapBar(
-      {Key? key, required this.context, required this.allGraffities})
-      : super(key: key);
+  const BottomMapBar({Key? key, required this.context}) : super(key: key);
 
   @override
   _BottomMapBarState createState() => _BottomMapBarState();
@@ -43,9 +40,7 @@ class _BottomMapBarState extends State<BottomMapBar> {
             Padding(
               padding: EdgeInsets.only(left: ctxW * 0.05, top: ctxH * 0.01),
               child: InkWell(
-                onTap: () => Get.to(() => Gallery(
-                      allGraffities: widget.allGraffities,
-                    )),
+                onTap: () => Get.to(() => Gallery()),
                 child: SvgPicture.asset('assets/svg/gallery.svg'),
               ),
             ),
