@@ -1,17 +1,14 @@
 import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:provider/src/provider.dart';
 import 'package:publicart/src/models/graffity_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:publicart/src/models/graffity_data.dart';
 import 'package:publicart/src/utils/colors.dart';
-import 'package:publicart/src/utils/constants.dart';
 
 class ParallaxList extends StatefulWidget {
   const ParallaxList({Key? key}) : super(key: key);
@@ -23,35 +20,9 @@ class ParallaxList extends StatefulWidget {
 class _ParallaxListState extends State<ParallaxList> {
   List<GraffityData> allGraffities = [];
 
-  getGraffitiesData() {
-    //
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // getGraffitiesData();
-  }
-
   @override
   Widget build(BuildContext context) {
     allGraffities = context.watch<GraffityModel>().artworks;
-    // return StreamBuilder(
-    //     stream: FirebaseFirestore.instance.collection('graffities').snapshots(),
-    //     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    //       return ListView(
-    //         children: snapshot.data?.docs.length != null
-    //             ? snapshot.data!.docs.map((artwork) {
-    //                 return GraffityListItem(
-    //                   imgUrl: artwork['photoSqr'],
-    //                   name: artwork['name'],
-    //                   city: artwork['city'],
-    //                   address: artwork['address'],
-    //                 );
-    //               }).toList()
-    //             : [const Text('loading')],
-    //       );
-    //     });
     return ListView.builder(
       itemBuilder: (context, index) {
         return Column(

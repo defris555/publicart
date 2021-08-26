@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'models/graffity_model.dart';
+import 'models/news_model.dart';
 import 'screens/map_screen.dart';
 import 'screens/on_boarding.dart';
 import 'utils/theme.dart';
@@ -22,6 +23,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     Provider.of<GraffityModel>(context, listen: false).getGraffitiesData();
+    Provider.of<NewsModel>(context, listen: false).getNewsData();
     first = box.read('first') ?? true;
     return ResponsiveSizer(builder: (context, orientation, screenType) {
       return GetMaterialApp(

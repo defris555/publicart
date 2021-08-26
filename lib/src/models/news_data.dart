@@ -1,5 +1,3 @@
-import 'package:publicart/src/models/news_model.dart';
-
 class NewsData {
   final String newsId;
   final String title;

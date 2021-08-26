@@ -4,7 +4,7 @@ import 'package:publicart/src/models/news_data.dart';
 
 class NewsModel extends ChangeNotifier {
   List<NewsData> _news = [];
-  List<NewsData> get artworks => _news;
+  List<NewsData> get news => _news;
 
   getNewsData() async {
     var snapshot = await FirebaseFirestore.instance.collection('news').get();
@@ -19,7 +19,7 @@ class NewsModel extends ChangeNotifier {
         date: event['date'],
       );
     }).toList());
-    _news.sort((a, b) => int.parse(a.newsId).compareTo(int.parse(b.newsId)));
+    _news.sort((a, b) => int.parse(b.newsId).compareTo(int.parse(a.newsId)));
     notifyListeners();
   }
 }

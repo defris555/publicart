@@ -6,14 +6,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location/flutter_map_location.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart' as gl;
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:provider/src/provider.dart';
 import 'package:publicart/src/models/graffity_data.dart';
-import 'package:publicart/src/models/graffity_model.dart';
-import 'package:publicart/src/screens/info_screen.dart';
 import 'package:publicart/src/utils/colors.dart';
 import 'package:publicart/src/widgets/bouncing_bar.dart';
 import 'package:publicart/src/widgets/top_bar.dart';
@@ -99,9 +95,6 @@ class _MapScreenState extends State<MapScreen> {
               FlutterMap(
                 mapController: mapController,
                 options: MapOptions(
-                  onTap: (_) {
-                    //TODO onTap to free Map, if needed
-                  },
                   minZoom: 11.5,
                   maxZoom: 17.41,
                   zoom: 13.5,
@@ -112,7 +105,6 @@ class _MapScreenState extends State<MapScreen> {
                     LocationPlugin(),
                   ],
                   center: _initialCameraPosition,
-                  // 59.744081,30.286011,59.917671,30.400234
                 ),
                 nonRotatedLayers: [
                   LocationOptions(
@@ -152,12 +144,6 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                 ],
               ),
-              // Align(
-              //   alignment: Alignment.bottomCenter,
-              //   child: BottomMapBar(
-              //     context: context,
-              //   ),
-              // ),
               _loading
                   ? const Center(
                       child: CircularProgressIndicator(
@@ -167,22 +153,6 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
         ),
-        // floatingActionButton: Container(
-        //   width: ctxW * 0.13,
-        //   height: ctxW * 0.13,
-        //   decoration: BoxDecoration(
-        //     color: Colors.white,
-        //     borderRadius: BorderRadius.circular(8.0),
-        //   ),
-        //   child: Padding(
-        //     padding: EdgeInsets.all(ctxW * 0.01),
-        //     child: SvgPicture.asset(
-        //       'assets/svg/map.svg',
-        //       color: deepCyan,
-        //     ),
-        //   ),
-        // ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }
@@ -282,8 +252,6 @@ class _MapScreenState extends State<MapScreen> {
                         .copyWith(color: deepCyan),
                   ),
                   children: [
-                    // Text(
-                    //     'Для корректной работы приложения, перейдите в настройки устройства и предоставте приложению доступ к определеню местоположения.'),
                     TextButton(
                       onPressed: () {
                         Get.offAll(MapScreen());
