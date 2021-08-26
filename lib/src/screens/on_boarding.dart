@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:publicart/src/api/models/graffity_data.dart';
+import 'package:publicart/src/models/graffity_data.dart';
 import 'package:publicart/src/screens/map_screen.dart';
 import 'package:publicart/src/utils/colors.dart';
 

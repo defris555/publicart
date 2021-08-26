@@ -2,9 +2,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'api/models/graffity_data.dart';
+import 'models/graffity_model.dart';
 import 'screens/map_screen.dart';
 import 'screens/on_boarding.dart';
 import 'utils/theme.dart';
@@ -20,7 +21,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    Provider.of<GraffityModel>(context, listen: false).getGraffitiesData();
     first = box.read('first') ?? true;
     return ResponsiveSizer(builder: (context, orientation, screenType) {
       return GetMaterialApp(

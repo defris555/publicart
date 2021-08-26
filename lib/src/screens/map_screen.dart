@@ -1,17 +1,22 @@
 import 'package:app_settings/app_settings.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location/flutter_map_location.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart' as gl;
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter/material.dart';
-import 'package:publicart/src/api/models/graffity_data.dart';
+import 'package:provider/src/provider.dart';
+import 'package:publicart/src/models/graffity_data.dart';
+import 'package:publicart/src/models/graffity_model.dart';
 import 'package:publicart/src/screens/info_screen.dart';
 import 'package:publicart/src/utils/colors.dart';
-import 'package:publicart/src/widgets/bottom_map_bar.dart';
+import 'package:publicart/src/widgets/bouncing_bar.dart';
+import 'package:publicart/src/widgets/top_bar.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -22,10 +27,15 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final MapController mapController = MapController();
+  GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
   LatLng _initialCameraPosition =
       LatLng(59.931604624881714, 30.345241813884833);
   late double ctxH, ctxW;
   bool _loading = false;
+  bool _isMarked = false;
+  List<Marker> markers = [];
+  List<GraffityData> allGraffities = [];
+  final _firestore = FirebaseFirestore.instance;
 
   _initPosition() async {
     try {
@@ -37,36 +47,50 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  _getMarkers() async {
+    setState(() {
+      _isMarked = false;
+    });
+    var snapshot = await _firestore.collection('graffities').get();
+    markers = [];
+    var data = snapshot.docs;
+    markers.addAll(data.map((item) {
+      String lat = item['latlng'].split(', ').first;
+      String lng = item['latlng'].split(', ').last;
+      LatLng point = LatLng(double.parse(lat), double.parse(lng));
+      return Marker(
+          key: ValueKey(item.id),
+          width: ctxW * 0.15,
+          height: ctxH * 0.15,
+          point: point,
+          builder: (context) {
+            return _artMarker(item['photoSqr']);
+          });
+    }));
+    setState(() {
+      _isMarked = true;
+      print(markers.first.point.toString());
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _initPosition();
+    _getMarkers();
   }
 
   @override
   Widget build(BuildContext context) {
-    final headline = Theme.of(context).textTheme.headline1!;
-    final bodytext = Theme.of(context).textTheme.bodyText1!;
+    // final headline = Theme.of(context).textTheme.headline1!;
+    // final bodytext = Theme.of(context).textTheme.bodyText1!;
+    // _getMarkers();
     ctxH = context.height;
     ctxW = context.width;
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Карта',
-            style: headline.copyWith(color: white),
-          ),
-          centerTitle: true,
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: ctxW * 0.05),
-              child: InkWell(
-                onTap: () => Get.to(() => const InfoScreen()),
-                child: SvgPicture.asset('assets/svg/info.svg'),
-              ),
-            )
-          ],
-        ),
+        appBar: topBar(context, key, 'Карта'),
+        bottomNavigationBar: const BouncingBar(index: 1),
         body: SizedBox(
           width: ctxW,
           height: ctxH,
@@ -123,14 +147,17 @@ class _MapScreenState extends State<MapScreen> {
                     urlTemplate:
                         'https://api.mapbox.com/styles/v1/pushkeen2021/ckqtmhja300ra18qpbwmi98o2/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoicHVzaGtlZW4yMDIxIiwiYSI6ImNrcW1kNTIycjAwa3Uydm8yYnJqM2toZmIifQ.Ykf_LHKFdlL3OPRWE2glqw',
                   ),
+                  MarkerLayerOptions(
+                    markers: _isMarked ? markers : [],
+                  ),
                 ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: BottomMapBar(
-                  context: context,
-                ),
-              ),
+              // Align(
+              //   alignment: Alignment.bottomCenter,
+              //   child: BottomMapBar(
+              //     context: context,
+              //   ),
+              // ),
               _loading
                   ? const Center(
                       child: CircularProgressIndicator(
@@ -140,23 +167,45 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
         ),
-        floatingActionButton: Container(
-          width: ctxW * 0.13,
-          height: ctxW * 0.13,
+        // floatingActionButton: Container(
+        //   width: ctxW * 0.13,
+        //   height: ctxW * 0.13,
+        //   decoration: BoxDecoration(
+        //     color: Colors.white,
+        //     borderRadius: BorderRadius.circular(8.0),
+        //   ),
+        //   child: Padding(
+        //     padding: EdgeInsets.all(ctxW * 0.01),
+        //     child: SvgPicture.asset(
+        //       'assets/svg/map.svg',
+        //       color: deepCyan,
+        //     ),
+        //   ),
+        // ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      ),
+    );
+  }
+
+  Widget _artMarker(String imgUrl) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          // width: ctxW * 0.2,
+          // height: ctxW * 0.2,
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8.0),
-          ),
+              color: Colors.white, borderRadius: BorderRadius.circular(8)),
           child: Padding(
             padding: EdgeInsets.all(ctxW * 0.01),
-            child: SvgPicture.asset(
-              'assets/svg/map.svg',
-              color: deepCyan,
-            ),
+            child: Image.network(imgUrl),
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      ),
+        SvgPicture.asset(
+          'assets/svg/tail.svg',
+          height: ctxH * 0.015,
+        ),
+      ],
     );
   }
 
@@ -262,29 +311,36 @@ class _MapScreenState extends State<MapScreen> {
       return Align(
         alignment: Alignment.bottomRight,
         child: Padding(
-          padding: EdgeInsets.only(bottom: ctxH * 0.12, right: ctxW * 0.05),
-          child: FloatingActionButton(
-              heroTag: 'myLocation',
-              backgroundColor: white,
-              child: SvgPicture.asset(
-                'assets/svg/cursor.svg',
-                color: deepCyan,
-              ),
-              onPressed: () async {
-                setState(() {
-                  _loading = true;
-                });
-                var position = await _getCurrentPosition();
+          padding: EdgeInsets.only(bottom: ctxH * 0.03, right: ctxW * 0.05),
+          child: Container(
+            decoration: BoxDecoration(
+              color: deepCyan,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: FloatingActionButton(
+                heroTag: 'myLocation',
+                elevation: 0,
+                backgroundColor: deepCyan,
+                child: SvgPicture.asset(
+                  'assets/svg/cursor.svg',
+                  color: white,
+                ),
+                onPressed: () async {
+                  setState(() {
+                    _loading = true;
+                  });
+                  var position = await _getCurrentPosition();
 
-                setState(() {
-                  _loading = false;
-                  try {
-                    mapController.move(position, 12.0);
-                  } catch (e) {
-                    print(e.toString());
-                  }
-                });
-              }),
+                  setState(() {
+                    _loading = false;
+                    try {
+                      mapController.move(position, 12.0);
+                    } catch (e) {
+                      print(e.toString());
+                    }
+                  });
+                }),
+          ),
         ),
       );
     };

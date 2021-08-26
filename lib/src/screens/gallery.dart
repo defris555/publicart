@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:publicart/src/api/models/graffity_data.dart';
+import 'package:publicart/src/widgets/bouncing_bar.dart';
 import 'package:publicart/src/widgets/parallax_list.dart';
+import 'package:publicart/src/widgets/top_bar.dart';
 
 class Gallery extends StatefulWidget {
   const Gallery({Key? key}) : super(key: key);
@@ -10,10 +11,15 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
+  GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ParallaxList(),
+    return SafeArea(
+      child: Scaffold(
+        appBar: topBar(context, key, 'Граффити'),
+        bottomNavigationBar: const BouncingBar(index: 0),
+        body: const ParallaxList(),
+      ),
     );
   }
 }

@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:provider/src/provider.dart';
+import 'package:publicart/src/models/graffity_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:publicart/src/api/models/graffity_data.dart';
+import 'package:publicart/src/models/graffity_data.dart';
 import 'package:publicart/src/utils/colors.dart';
 import 'package:publicart/src/utils/constants.dart';
 
@@ -19,34 +21,11 @@ class ParallaxList extends StatefulWidget {
 }
 
 class _ParallaxListState extends State<ParallaxList> {
-  final GetStorage box = GetStorage();
-  // List<GraffityData> artworks = [];
+  List<GraffityData> allGraffities = [];
 
-  // getGraffitiesData(AsyncSnapshot<QuerySnapshot> snapshot) async {
-  //   artworks = [];
-  //   var data = snapshot.data;
-  //   artworks.addAll(data!.docs.map((artwork) {
-  //     return GraffityData(
-  //       id: artwork['id'],
-  //       name: artwork['name'],
-  //       description: artwork['description'],
-  //       city: artwork['city'],
-  //       address: artwork['address'],
-  //       audio: artwork['audio'],
-  //       ar: artwork['ar'],
-  //       latlng: artwork['latlng'],
-  //       artist: artwork['artist'],
-  //       bio: artwork['bio'],
-  //       avatar: artwork['avatar'],
-  //       insta: artwork['insta'],
-  //       insta2: artwork['insta2'],
-  //       photoUrl: artwork['photoUrl'],
-  //       photoSqr: artwork['photoSqr'],
-  //     );
-  //   }).toList());
-  //   artworks.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
-  //   print(artworks.first.name);
-  // }
+  getGraffitiesData() {
+    //
+  }
 
   @override
   void initState() {
@@ -56,60 +35,40 @@ class _ParallaxListState extends State<ParallaxList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('graffities').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          // getGraffitiesData(snapshot);
-          // List artworks = snapshot.data!.docs.map((artwork) {
-          //   return GraffityData(
-          //     id: artwork['id'],
-          //     name: artwork['name'],
-          //     description: artwork['description'],
-          //     city: artwork['city'],
-          //     address: artwork['address'],
-          //     audio: artwork['audio'],
-          //     ar: artwork['ar'],
-          //     latlng: artwork['latlng'],
-          //     artist: artwork['artist'],
-          //     bio: artwork['bio'],
-          //     avatar: artwork['avatar'],
-          //     insta: artwork['insta'],
-          //     insta2: artwork['insta2'],
-          //     photoUrl: artwork['photoUrl'],
-          //     photoSqr: artwork['photoSqr'],
-          //   );
-          // }).toList();
-          // artworks.sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
-          return ListView(
-            children: snapshot.data?.docs.length != null
-                ? snapshot.data!.docs.map((artwork) {
-                    return GraffityListItem(
-                      imgUrl: artwork['photoSqr'],
-                      name: artwork['name'],
-                      city: artwork['city'],
-                      address: artwork['address'],
-                    );
-                  }).toList()
-                : [const Text('loading')],
-          );
-        });
-    // return ListView.builder(
-    //   itemBuilder: (context, index) {
-    //     return Column(
-    //       children: [
-    //         for (int i = index; i < allGraffities.length; i++)
-    //           GraffityListItem(
-    //             imgUrl: '$photoUrlPrefix/${allGraffities[i]["photoSqr"]}',
-    //             name: allGraffities[i]['name'],
-    //             city: allGraffities[i]['city'],
-    //             address: allGraffities[i]['address'],
-    //           ),
-    //       ],
-    //     );
-    //   },
-    //   primary: true,
-    //   itemCount: 1,
-    // );
+    allGraffities = context.watch<GraffityModel>().artworks;
+    // return StreamBuilder(
+    //     stream: FirebaseFirestore.instance.collection('graffities').snapshots(),
+    //     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    //       return ListView(
+    //         children: snapshot.data?.docs.length != null
+    //             ? snapshot.data!.docs.map((artwork) {
+    //                 return GraffityListItem(
+    //                   imgUrl: artwork['photoSqr'],
+    //                   name: artwork['name'],
+    //                   city: artwork['city'],
+    //                   address: artwork['address'],
+    //                 );
+    //               }).toList()
+    //             : [const Text('loading')],
+    //       );
+    //     });
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return Column(
+          children: [
+            for (int i = index; i < allGraffities.length; i++)
+              GraffityListItem(
+                imgUrl: allGraffities[i].photoSqr,
+                name: allGraffities[i].name,
+                city: allGraffities[i].city,
+                address: allGraffities[i].address,
+              ),
+          ],
+        );
+      },
+      primary: true,
+      itemCount: 1,
+    );
   }
 }
 
@@ -135,19 +94,15 @@ class GraffityListItem extends StatelessWidget {
         .headline1!
         .copyWith(color: white, fontSize: 17.sp);
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.width * 0.05,
-        vertical: context.height * 0.01,
-      ),
+      padding: EdgeInsets.only(bottom: context.height * 0.01),
       child: AspectRatio(
         aspectRatio: 16 / 9,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+        child: SizedBox(
           child: Stack(
             children: [
               _buildParallaxBackground(context),
               _buildGradient(),
-              _buildTitleAndSubtitle(headline),
+              _buildTitleAndSubtitle(context, headline),
             ],
           ),
         ),
@@ -187,31 +142,38 @@ class GraffityListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildTitleAndSubtitle(TextStyle headline) {
-    return Positioned(
-      left: 20,
-      bottom: 20,
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-          child: Container(
-            color: deepBlue.withOpacity(0.3),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: headline,
+  Widget _buildTitleAndSubtitle(BuildContext context, TextStyle headline) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ClipRect(
+        child: SizedBox(
+          width: context.width,
+          height: context.height * 0.07,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            child: Container(
+              color: deepBlue.withOpacity(0.3),
+              child: Padding(
+                padding: EdgeInsets.only(left: context.width * 0.05),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: headline,
+                    ),
+                    Text(
+                      '$city, $address',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  '$city\n$address',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

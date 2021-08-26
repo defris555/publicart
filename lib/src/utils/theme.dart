@@ -5,7 +5,7 @@ import 'package:publicart/src/utils/colors.dart';
 
 ThemeData mainTheme() => ThemeData(
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      scaffoldBackgroundColor: Colors.transparent,
+      scaffoldBackgroundColor: dark,
       appBarTheme: const AppBarTheme(
         backgroundColor: deepCyan,
         foregroundColor: Colors.white,
