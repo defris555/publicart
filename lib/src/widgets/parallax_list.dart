@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:provider/src/provider.dart';
 import 'package:publicart/src/models/graffity_model.dart';
+import 'package:publicart/src/screens/graffity_card.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'package:publicart/src/models/graffity_data.dart';
@@ -29,6 +30,7 @@ class _ParallaxListState extends State<ParallaxList> {
           children: [
             for (int i = index; i < allGraffities.length; i++)
               GraffityListItem(
+                artwork: allGraffities[i],
                 imgUrl: allGraffities[i].photoSqr,
                 name: allGraffities[i].name,
                 city: allGraffities[i].city,
@@ -49,14 +51,16 @@ class GraffityListItem extends StatelessWidget {
   final String name;
   final String city;
   final String address;
+  final GraffityData artwork;
 
-  GraffityListItem(
-      {Key? key,
-      required this.imgUrl,
-      required this.name,
-      required this.city,
-      required this.address})
-      : super(key: key);
+  GraffityListItem({
+    Key? key,
+    required this.imgUrl,
+    required this.name,
+    required this.city,
+    required this.address,
+    required this.artwork,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,17 +68,22 @@ class GraffityListItem extends StatelessWidget {
         .textTheme
         .headline1!
         .copyWith(color: white, fontSize: 17.sp);
-    return Padding(
-      padding: EdgeInsets.only(bottom: context.height * 0.01),
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: SizedBox(
-          child: Stack(
-            children: [
-              _buildParallaxBackground(context),
-              _buildGradient(),
-              _buildTitleAndSubtitle(context, headline),
-            ],
+    return InkWell(
+      onTap: () => Get.to(() => GraffityCard(
+            artwork: artwork,
+          )),
+      child: Padding(
+        padding: EdgeInsets.only(bottom: context.height * 0.01),
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: SizedBox(
+            child: Stack(
+              children: [
+                _buildParallaxBackground(context),
+                _buildGradient(),
+                _buildTitleAndSubtitle(context, headline),
+              ],
+            ),
           ),
         ),
       ),

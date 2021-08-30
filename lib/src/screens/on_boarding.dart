@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:publicart/src/screens/map_screen.dart';
+import 'package:publicart/src/screens/gallery.dart';
 import 'package:publicart/src/utils/colors.dart';
 
 class OnBoarding extends StatefulWidget {
@@ -18,7 +18,7 @@ class _OnBoardingState extends State<OnBoarding> {
 
   void _onIntroEnd(context) {
     box.write('first', false);
-    Get.to(() => MapScreen());
+    Get.to(() => Gallery());
   }
 
   Widget _buildFullscrenImage(BuildContext context, String introIndex) {

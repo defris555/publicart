@@ -16,7 +16,14 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: topBar(context, key, 'Новости'),
+        appBar: topBar(
+          context: context,
+          key: key,
+          title: 'Новости',
+          info: true,
+          backArrow: false,
+          filter: '',
+        ),
         bottomNavigationBar: const BouncingBar(index: 2),
         body: const NewsList(),
       ),

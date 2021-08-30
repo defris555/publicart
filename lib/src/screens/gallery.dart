@@ -16,7 +16,14 @@ class _GalleryState extends State<Gallery> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: topBar(context, key, 'Граффити'),
+        appBar: topBar(
+          context: context,
+          key: key,
+          title: 'Граффити',
+          info: true,
+          backArrow: false,
+          filter: '',
+        ),
         bottomNavigationBar: const BouncingBar(index: 0),
         body: const ParallaxList(),
       ),

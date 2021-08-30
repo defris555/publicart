@@ -8,6 +8,7 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart' as gl;
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:publicart/src/models/graffity_data.dart';
 import 'package:publicart/src/utils/colors.dart';
@@ -22,6 +23,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  final GetStorage box = GetStorage();
   final MapController mapController = MapController();
   GlobalKey<ScaffoldState> key = GlobalKey<ScaffoldState>();
   LatLng _initialCameraPosition =
@@ -34,12 +36,25 @@ class _MapScreenState extends State<MapScreen> {
   final _firestore = FirebaseFirestore.instance;
 
   _initPosition() async {
-    try {
-      _initialCameraPosition = await _getCurrentPosition();
-    } on Exception catch (e) {
-      print('GEOLOCKeRRoR');
-      print(e.toString());
-      _initialCameraPosition = LatLng(59.931604624881714, 30.345241813884833);
+    if (!await box.hasData('position')) {
+      try {
+        _initialCameraPosition = await _getCurrentPosition();
+      } catch (e) {
+        print('GEOLOCKeRRoR');
+        print(e.toString());
+        _initialCameraPosition = LatLng(59.931604624881714, 30.345241813884833);
+      }
+    } else {
+      try {
+        String position = await box.read('position');
+        double lat = double.parse(position.split(',').first);
+        double lng = double.parse(position.split(',').last);
+        LatLng userPosition = LatLng(lat, lng);
+        _initialCameraPosition = userPosition;
+      } catch (e) {
+        print(e.toString());
+        _initialCameraPosition = LatLng(59.931604624881714, 30.345241813884833);
+      }
     }
   }
 
@@ -85,7 +100,14 @@ class _MapScreenState extends State<MapScreen> {
     ctxW = context.width;
     return SafeArea(
       child: Scaffold(
-        appBar: topBar(context, key, 'Карта'),
+        appBar: topBar(
+          context: context,
+          key: key,
+          title: 'Карта',
+          info: true,
+          backArrow: false,
+          filter: '',
+        ),
         bottomNavigationBar: const BouncingBar(index: 1),
         body: SizedBox(
           width: ctxW,
