@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:provider/src/provider.dart';
-import 'package:publicart/src/models/news_model.dart';
-import 'package:publicart/src/models/news_data.dart';
+import '../models/news_model.dart';
+import '../models/news_data.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:publicart/src/utils/colors.dart';
+import '../utils/colors.dart';
 
 class NewsList extends StatefulWidget {
   const NewsList({Key? key}) : super(key: key);

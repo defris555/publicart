@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:publicart/src/widgets/bouncing_bar.dart';
-import 'package:publicart/src/widgets/parallax_list.dart';
-import 'package:publicart/src/widgets/top_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+
+import '../utils/colors.dart';
+import '../widgets/clipper.dart';
+import '../widgets/unity_ar.dart';
+import '../widgets/bouncing_bar.dart';
+import '../widgets/parallax_list.dart';
+import '../widgets/top_bar.dart';
 
 class Gallery extends StatefulWidget {
   const Gallery({Key? key}) : super(key: key);
@@ -24,8 +30,30 @@ class _GalleryState extends State<Gallery> {
           backArrow: false,
           filter: '',
         ),
-        bottomNavigationBar: const BouncingBar(index: 0),
+        bottomNavigationBar: BouncingBar(context: context, index: 0),
         body: const ParallaxList(),
+        floatingActionButton: InkWell(
+          onTap: () {
+            // Get.to(() => UnityWidgetSceneRouter(context: context));
+          },
+          child: Padding(
+            padding: EdgeInsets.only(top: context.height * 0.025),
+            child: ClipOval(
+              clipper: OvalBottomClip(),
+              child: Container(
+                width: context.width * 0.175,
+                height: context.width * 0.15,
+                color: back,
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/svg/ar.svg',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }

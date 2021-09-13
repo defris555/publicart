@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:publicart/src/widgets/bouncing_bar.dart';
-import 'package:publicart/src/widgets/news_list.dart';
-import 'package:publicart/src/widgets/top_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+
+import '../utils/colors.dart';
+import '../widgets/unity_ar.dart';
+import '../widgets/bouncing_bar.dart';
+import '../widgets/news_list.dart';
+import '../widgets/top_bar.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({Key? key}) : super(key: key);
@@ -24,9 +29,45 @@ class _NewsScreenState extends State<NewsScreen> {
           backArrow: false,
           filter: '',
         ),
-        bottomNavigationBar: const BouncingBar(index: 2),
+        bottomNavigationBar: BouncingBar(context: context, index: 3),
         body: const NewsList(),
+        floatingActionButton: InkWell(
+          onTap: () {
+            // Get.to(() => UnityWidgetSceneRouter(context: context));
+          },
+          child: Padding(
+            padding: EdgeInsets.only(top: context.height * 0.025),
+            child: ClipOval(
+              clipper: OvalBottomClip(),
+              child: Container(
+                width: context.width * 0.175,
+                height: context.width * 0.15,
+                color: back,
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/svg/ar.svg',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
+  }
+}
+
+class OvalBottomClip extends CustomClipper<Rect> {
+  @override
+  Rect getClip(Size size) {
+    Rect rect =
+        Rect.fromLTRB(0.0, 0.0, size.width, size.height - size.height * 0.15);
+    return rect;
+  }
+
+  @override
+  bool shouldReclip(OvalBottomClip oldClipper) {
+    return true;
   }
 }

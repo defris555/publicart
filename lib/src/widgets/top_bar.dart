@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:publicart/src/screens/info_screen.dart';
-import 'package:publicart/src/utils/colors.dart';
+import '../screens/info_screen.dart';
+import '../utils/colors.dart';
 
 AppBar topBar({
   required BuildContext context,

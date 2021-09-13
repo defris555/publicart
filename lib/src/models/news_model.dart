@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:publicart/src/models/news_data.dart';
+import '../models/news_data.dart';
 
 class NewsModel extends ChangeNotifier {
   List<NewsData> _news = [];

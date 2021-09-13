@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:provider/src/provider.dart';
-import 'package:publicart/src/models/graffity_model.dart';
-import 'package:publicart/src/screens/graffity_card.dart';
+import '../models/graffity_model.dart';
+import '../screens/graffity_card.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import 'package:publicart/src/models/graffity_data.dart';
-import 'package:publicart/src/utils/colors.dart';
+import '../models/graffity_data.dart';
+import '../utils/colors.dart';
 
 class ParallaxList extends StatefulWidget {
   const ParallaxList({Key? key}) : super(key: key);

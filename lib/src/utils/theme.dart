@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:publicart/src/utils/colors.dart';
+import '../utils/colors.dart';
 
 ThemeData mainTheme() => ThemeData(
       visualDensity: VisualDensity.adaptivePlatformDensity,
       scaffoldBackgroundColor: dark,
       appBarTheme: const AppBarTheme(
-        backgroundColor: deepCyan,
+        backgroundColor: back,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

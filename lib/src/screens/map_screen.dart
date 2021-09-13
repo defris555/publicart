@@ -10,10 +10,13 @@ import 'package:geolocator/geolocator.dart' as gl;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:publicart/src/models/graffity_data.dart';
-import 'package:publicart/src/utils/colors.dart';
-import 'package:publicart/src/widgets/bouncing_bar.dart';
-import 'package:publicart/src/widgets/top_bar.dart';
+
+import '../models/graffity_data.dart';
+import '../utils/colors.dart';
+import '../widgets/bouncing_bar.dart';
+import '../widgets/clipper.dart';
+import '../widgets/top_bar.dart';
+import '../widgets/unity_ar.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -36,7 +39,7 @@ class _MapScreenState extends State<MapScreen> {
   final _firestore = FirebaseFirestore.instance;
 
   _initPosition() async {
-    if (!await box.hasData('position')) {
+    if (!box.hasData('position')) {
       try {
         _initialCameraPosition = await _getCurrentPosition();
       } catch (e) {
@@ -108,7 +111,7 @@ class _MapScreenState extends State<MapScreen> {
           backArrow: false,
           filter: '',
         ),
-        bottomNavigationBar: const BouncingBar(index: 1),
+        bottomNavigationBar: BouncingBar(context: context, index: 1),
         body: SizedBox(
           width: ctxW,
           height: ctxH,
@@ -175,6 +178,28 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
         ),
+        floatingActionButton: InkWell(
+          onTap: () {
+            // Get.to(() => UnityWidgetSceneRouter(context: context));
+          },
+          child: Padding(
+            padding: EdgeInsets.only(top: context.height * 0.025),
+            child: ClipOval(
+              clipper: OvalBottomClip(),
+              child: Container(
+                width: context.width * 0.175,
+                height: context.width * 0.15,
+                color: back,
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/svg/ar.svg',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }

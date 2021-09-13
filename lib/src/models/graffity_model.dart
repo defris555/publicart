@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:publicart/src/models/graffity_data.dart';
+import '../models/graffity_data.dart';
 
 class GraffityModel extends ChangeNotifier {
   List<GraffityData> _artworks = [];

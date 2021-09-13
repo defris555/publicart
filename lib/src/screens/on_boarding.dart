@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:publicart/src/screens/gallery.dart';
-import 'package:publicart/src/utils/colors.dart';
+import '../screens/gallery.dart';
+import '../utils/colors.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({Key? key}) : super(key: key);

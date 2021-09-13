@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:publicart/src/screens/gallery.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'models/graffity_model.dart';
 import 'models/news_model.dart';
+import 'screens/gallery.dart';
 import 'screens/on_boarding.dart';
 import 'utils/theme.dart';
 
